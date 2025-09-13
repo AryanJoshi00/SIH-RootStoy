@@ -1,21 +1,32 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Shield, MapPin, AlertTriangle, CheckCircle, ExternalLink } from 'lucide-react';
-import Button from '../components/ui/Button';
-import { Card, CardContent, CardHeader } from '../components/ui/Card';
-import Badge from '../components/ui/Badge';
-import EventTimeline from '../components/EventTimeline';
-import GeoMap from '../components/GeoMap';
-import CertificateBadge from '../components/CertificateBadge';
-import { mockApi } from '../data/mockData';
-import toast from 'react-hot-toast';
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import {
+  ArrowLeft,
+  Shield,
+  MapPin,
+  AlertTriangle,
+  CheckCircle,
+  ExternalLink,
+} from "lucide-react";
+import Button from "../components/ui/Button";
+import { Card, CardContent, CardHeader } from "../components/ui/Card";
+import Badge from "../components/ui/Badge";
+import EventTimeline from "../components/EventTimeline";
+import GeoMap from "../components/GeoMap";
+import CertificateBadge from "../components/CertificateBadge";
+import { mockApi } from "../data/mockData";
+import toast from "react-hot-toast";
 
 const ProductPage = () => {
   const { code } = useParams();
   const navigate = useNavigate();
 
-  const { data: product, isLoading, error } = useQuery({
-    queryKey: ['product', code],
+  const {
+    data: product,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["product", code],
     queryFn: () => mockApi.getProduct(code),
     retry: 1,
   });
@@ -58,13 +69,12 @@ const ProductPage = () => {
               Product Not Found
             </h2>
             <p className="text-earth-600 mb-8">
-              The product code "{code}" could not be found. Please check the QR code and try again.
+              The product code "{code}" could not be found. Please check the QR
+              code and try again.
             </p>
             <div className="flex gap-4 justify-center">
-              <Button onClick={() => navigate('/scan')}>
-                Scan Again
-              </Button>
-              <Button variant="outline" onClick={() => navigate('/')}>
+              <Button onClick={() => navigate("/scan")}>Scan Again</Button>
+              <Button variant="outline" onClick={() => navigate("/")}>
                 Go Home
               </Button>
             </div>
@@ -74,8 +84,7 @@ const ProductPage = () => {
     );
   }
 
-  const isRecalled = product.recallStatus === 'Recalled';
-  const isPending = product.batchStatus === 'Pending';
+  const isRecalled = product.recallStatus === "Recalled";
 
   return (
     <div className="min-h-screen bg-earth-50 py-8 px-4">
@@ -84,20 +93,18 @@ const ProductPage = () => {
         <div className="flex items-center justify-between mb-8">
           <Button
             variant="ghost"
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="flex items-center space-x-2"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Home</span>
           </Button>
-          
           <div className="text-center">
             <h1 className="text-2xl font-display font-bold text-earth-900">
               {product.herbName}
             </h1>
             <p className="text-earth-600">Batch: {product.batchCode}</p>
           </div>
-          
           <div className="w-32"></div> {/* Spacer for centering */}
         </div>
 
@@ -112,7 +119,8 @@ const ProductPage = () => {
                     Product Recall Alert
                   </h3>
                   <p className="text-red-800 mb-4">
-                    This product batch has been recalled. Please do not consume and return to place of purchase.
+                    This product batch has been recalled. Please do not consume
+                    and return to place of purchase.
                   </p>
                   <Button
                     variant="danger"
@@ -151,29 +159,41 @@ const ProductPage = () => {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="font-medium text-earth-900 mb-2">Herb Name</h3>
+                    <h3 className="font-medium text-earth-900 mb-2">
+                      Herb Name
+                    </h3>
                     <p className="text-earth-600">{product.herbName}</p>
                   </div>
                   <div>
-                    <h3 className="font-medium text-earth-900 mb-2">Batch Code</h3>
-                    <p className="text-earth-600 font-mono">{product.batchCode}</p>
+                    <h3 className="font-medium text-earth-900 mb-2">
+                      Batch Code
+                    </h3>
+                    <p className="text-earth-600 font-mono">
+                      {product.batchCode}
+                    </p>
                   </div>
                   <div>
-                    <h3 className="font-medium text-earth-900 mb-2">Blockchain Hash</h3>
+                    <h3 className="font-medium text-earth-900 mb-2">
+                      Blockchain Hash
+                    </h3>
                     <p className="text-earth-600 font-mono text-sm break-all">
                       {product.blockchainHash}
                     </p>
                   </div>
                   <div>
-                    <h3 className="font-medium text-earth-900 mb-2">Sustainability Score</h3>
+                    <h3 className="font-medium text-earth-900 mb-2">
+                      Sustainability Score
+                    </h3>
                     <div className="flex items-center space-x-2">
                       <div className="flex-1 bg-earth-200 rounded-full h-2">
-                        <div 
+                        <div
                           className="bg-emerald-600 h-2 rounded-full transition-all duration-500"
                           style={{ width: `${product.sustainabilityScore}%` }}
                         ></div>
                       </div>
-                      <span className="text-sm text-earth-600">{product.sustainabilityScore}%</span>
+                      <span className="text-sm text-earth-600">
+                        {product.sustainabilityScore}%
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -242,7 +262,9 @@ const ProductPage = () => {
             {/* Actions */}
             <Card>
               <CardHeader>
-                <h2 className="text-xl font-semibold text-earth-900">Actions</h2>
+                <h2 className="text-xl font-semibold text-earth-900">
+                  Actions
+                </h2>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -254,12 +276,12 @@ const ProductPage = () => {
                     <Shield className="h-4 w-4" />
                     <span>Check Recall Status</span>
                   </Button>
-                  
+
                   <Button
                     variant="outline"
                     onClick={() => {
                       navigator.clipboard.writeText(product.blockchainHash);
-                      toast.success('Blockchain hash copied to clipboard');
+                      toast.success("Blockchain hash copied to clipboard");
                     }}
                     className="w-full flex items-center justify-center space-x-2"
                   >

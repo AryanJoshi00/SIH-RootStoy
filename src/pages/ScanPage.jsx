@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { QrCode, ArrowLeft, Camera, AlertCircle } from 'lucide-react';
-import Button from '../components/ui/Button';
-import { Card, CardContent } from '../components/ui/Card';
-import QRScanner from '../components/QRScanner';
-import toast from 'react-hot-toast';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { QrCode, ArrowLeft, Camera, AlertCircle } from "lucide-react";
+import Button from "../components/ui/Button";
+import { Card, CardContent } from "../components/ui/Card";
+import QRScanner from "../components/QRScanner";
+import toast from "react-hot-toast";
 
 const ScanPage = () => {
   const [isScannerOpen, setIsScannerOpen] = useState(false);
@@ -16,10 +16,12 @@ const ScanPage = () => {
     const checkCamera = async () => {
       try {
         const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        const videoDevices = devices.filter(
+          (device) => device.kind === "videoinput"
+        );
         setHasCamera(videoDevices.length > 0);
       } catch (error) {
-        console.error('Error checking camera:', error);
+        console.error("Error checking camera:", error);
         setHasCamera(false);
       }
     };
@@ -29,30 +31,29 @@ const ScanPage = () => {
 
   const handleScan = (code) => {
     setIsScannerOpen(false);
-    toast.success('QR Code scanned successfully!');
+    toast.success("QR Code scanned successfully!");
     navigate(`/product/${code}`);
-  };
-
-  const handleScanError = () => {
-    toast.error('Failed to scan QR code. Please try again.');
   };
 
   const instructions = [
     {
       step: 1,
-      title: 'Position the QR Code',
-      description: 'Hold your device steady and position the QR code within the scanning frame.'
+      title: "Position the QR Code",
+      description:
+        "Hold your device steady and position the QR code within the scanning frame.",
     },
     {
       step: 2,
-      title: 'Wait for Detection',
-      description: 'The scanner will automatically detect and read the QR code.'
+      title: "Wait for Detection",
+      description:
+        "The scanner will automatically detect and read the QR code.",
     },
     {
       step: 3,
-      title: 'View Product Details',
-      description: 'You\'ll be redirected to see the complete product journey and certifications.'
-    }
+      title: "View Product Details",
+      description:
+        "You'll be redirected to see the complete product journey and certifications.",
+    },
   ];
 
   return (
@@ -62,17 +63,15 @@ const ScanPage = () => {
         <div className="flex items-center justify-between mb-8">
           <Button
             variant="ghost"
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="flex items-center space-x-2"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Home</span>
           </Button>
-          
           <h1 className="text-2xl font-display font-bold text-earth-900">
             Scan QR Code
           </h1>
-          
           <div className="w-20"></div> {/* Spacer for centering */}
         </div>
 
@@ -85,13 +84,13 @@ const ScanPage = () => {
                   <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <QrCode className="h-10 w-10 text-emerald-600" />
                   </div>
-                  
+
                   <h2 className="text-xl font-semibold text-earth-900 mb-4">
                     Ready to Scan
                   </h2>
-                  
+
                   <p className="text-earth-600 mb-6">
-                    Scan the QR code on your Ayurvedic herb packaging to view 
+                    Scan the QR code on your Ayurvedic herb packaging to view
                     its complete journey and verification details.
                   </p>
 
@@ -102,13 +101,11 @@ const ScanPage = () => {
                         Camera Not Available
                       </h3>
                       <p className="text-earth-600 mb-6">
-                        Your device doesn't have a camera or camera access is blocked. 
-                        You can still use sample product codes to explore the platform.
+                        Your device doesn't have a camera or camera access is
+                        blocked. You can still use sample product codes to
+                        explore the platform.
                       </p>
-                      <Button
-                        variant="outline"
-                        onClick={() => navigate('/')}
-                      >
+                      <Button variant="outline" onClick={() => navigate("/")}>
                         Go to Home
                       </Button>
                     </div>
@@ -135,12 +132,16 @@ const ScanPage = () => {
                 <p className="text-earth-600 mb-4">
                   Don't have a QR code? Try these sample product codes:
                 </p>
-                
+
                 <div className="space-y-3">
                   {[
-                    { code: 'A123XY', name: 'Ashwagandha', status: 'Certified' },
-                    { code: 'B456YZ', name: 'Turmeric', status: 'Certified' },
-                    { code: 'C789AB', name: 'Brahmi', status: 'Pending' }
+                    {
+                      code: "A123XY",
+                      name: "Ashwagandha",
+                      status: "Certified",
+                    },
+                    { code: "B456YZ", name: "Turmeric", status: "Certified" },
+                    { code: "C789AB", name: "Brahmi", status: "Pending" },
                   ].map((product) => (
                     <div
                       key={product.code}
@@ -148,15 +149,21 @@ const ScanPage = () => {
                       onClick={() => navigate(`/product/${product.code}`)}
                     >
                       <div>
-                        <div className="font-medium text-earth-900">{product.name}</div>
-                        <div className="text-sm text-earth-600">Code: {product.code}</div>
+                        <div className="font-medium text-earth-900">
+                          {product.name}
+                        </div>
+                        <div className="text-sm text-earth-600">
+                          Code: {product.code}
+                        </div>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          product.status === 'Certified' 
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : 'bg-amber-100 text-amber-800'
-                        }`}>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            product.status === "Certified"
+                              ? "bg-emerald-100 text-emerald-800"
+                              : "bg-amber-100 text-amber-800"
+                          }`}
+                        >
                           {product.status}
                         </span>
                         <QrCode className="h-4 w-4 text-earth-400" />
@@ -175,10 +182,13 @@ const ScanPage = () => {
                 <h3 className="text-lg font-semibold text-earth-900 mb-6">
                   How to Scan
                 </h3>
-                
+
                 <div className="space-y-6">
                   {instructions.map((instruction) => (
-                    <div key={instruction.step} className="flex items-start space-x-4">
+                    <div
+                      key={instruction.step}
+                      className="flex items-start space-x-4"
+                    >
                       <div className="flex-shrink-0">
                         <div className="w-8 h-8 bg-emerald-600 text-white rounded-full flex items-center justify-center text-sm font-semibold">
                           {instruction.step}
@@ -204,7 +214,7 @@ const ScanPage = () => {
                 <h3 className="text-lg font-semibold text-earth-900 mb-4">
                   Scanning Tips
                 </h3>
-                
+
                 <ul className="space-y-2 text-sm text-earth-600">
                   <li className="flex items-start space-x-2">
                     <span className="text-emerald-600 mt-1">•</span>
@@ -212,7 +222,9 @@ const ScanPage = () => {
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-emerald-600 mt-1">•</span>
-                    <span>Hold your device steady and at a comfortable distance</span>
+                    <span>
+                      Hold your device steady and at a comfortable distance
+                    </span>
                   </li>
                   <li className="flex items-start space-x-2">
                     <span className="text-emerald-600 mt-1">•</span>

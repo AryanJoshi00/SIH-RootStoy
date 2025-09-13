@@ -1,18 +1,29 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, AlertTriangle, CheckCircle, Phone, Mail, ExternalLink } from 'lucide-react';
-import Button from '../components/ui/Button';
-import { Card, CardContent, CardHeader } from '../components/ui/Card';
-import Badge from '../components/ui/Badge';
-import { mockApi } from '../data/mockData';
-import toast from 'react-hot-toast';
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import {
+  ArrowLeft,
+  AlertTriangle,
+  CheckCircle,
+  Phone,
+  Mail,
+  ExternalLink,
+} from "lucide-react";
+import Button from "../components/ui/Button";
+import { Card, CardContent, CardHeader } from "../components/ui/Card";
+import Badge from "../components/ui/Badge";
+import { mockApi } from "../data/mockData";
+import toast from "react-hot-toast";
 
 const RecallPage = () => {
   const { batchCode } = useParams();
   const navigate = useNavigate();
 
-  const { data: recall, isLoading, error } = useQuery({
-    queryKey: ['recall', batchCode],
+  const {
+    data: recall,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["recall", batchCode],
     queryFn: () => mockApi.getRecall(batchCode),
     retry: 1,
   });
@@ -43,12 +54,11 @@ const RecallPage = () => {
               Error Loading Recall Information
             </h2>
             <p className="text-earth-600 mb-8">
-              There was an error loading recall information for batch "{batchCode}".
+              There was an error loading recall information for batch "
+              {batchCode}".
             </p>
             <div className="flex gap-4 justify-center">
-              <Button onClick={() => navigate('/')}>
-                Go Home
-              </Button>
+              <Button onClick={() => navigate("/")}>Go Home</Button>
             </div>
           </div>
         </div>
@@ -56,7 +66,7 @@ const RecallPage = () => {
     );
   }
 
-  const isRecalled = recall.recallStatus === 'Recalled';
+  const isRecalled = recall.recallStatus === "Recalled";
 
   return (
     <div className="min-h-screen bg-earth-50 py-8 px-4">
@@ -65,27 +75,31 @@ const RecallPage = () => {
         <div className="flex items-center justify-between mb-8">
           <Button
             variant="ghost"
-            onClick={() => navigate('/')}
+            onClick={() => navigate("/")}
             className="flex items-center space-x-2"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to Home</span>
           </Button>
-          
           <div className="text-center">
             <h1 className="text-2xl font-display font-bold text-earth-900">
               Recall Check
             </h1>
             <p className="text-earth-600">Batch: {batchCode}</p>
           </div>
-          
           <div className="w-32"></div> {/* Spacer for centering */}
         </div>
 
         {/* Main Content */}
         <div className="space-y-8">
           {/* Status Card */}
-          <Card className={isRecalled ? 'border-red-200 bg-red-50' : 'border-emerald-200 bg-emerald-50'}>
+          <Card
+            className={
+              isRecalled
+                ? "border-red-200 bg-red-50"
+                : "border-emerald-200 bg-emerald-50"
+            }
+          >
             <CardContent>
               <div className="text-center py-8">
                 {isRecalled ? (
@@ -133,34 +147,42 @@ const RecallPage = () => {
                     <h3 className="font-medium text-earth-900 mb-2">Product</h3>
                     <p className="text-earth-600">{recall.herbName}</p>
                   </div>
-                  
+
                   <div>
-                    <h3 className="font-medium text-earth-900 mb-2">Recall Reason</h3>
+                    <h3 className="font-medium text-earth-900 mb-2">
+                      Recall Reason
+                    </h3>
                     <p className="text-earth-600">{recall.recallReason}</p>
                   </div>
-                  
+
                   <div>
-                    <h3 className="font-medium text-earth-900 mb-2">Recall Date</h3>
+                    <h3 className="font-medium text-earth-900 mb-2">
+                      Recall Date
+                    </h3>
                     <p className="text-earth-600">
-                      {new Date(recall.recallDate).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
+                      {new Date(recall.recallDate).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
                       })}
                     </p>
                   </div>
-                  
+
                   <div>
-                    <h3 className="font-medium text-earth-900 mb-2">Affected Products</h3>
+                    <h3 className="font-medium text-earth-900 mb-2">
+                      Affected Products
+                    </h3>
                     <ul className="list-disc list-inside text-earth-600 space-y-1">
                       {recall.affectedProducts.map((product, index) => (
                         <li key={index}>{product}</li>
                       ))}
                     </ul>
                   </div>
-                  
+
                   <div>
-                    <h3 className="font-medium text-earth-900 mb-2">Instructions</h3>
+                    <h3 className="font-medium text-earth-900 mb-2">
+                      Instructions
+                    </h3>
                     <p className="text-earth-600">{recall.instructions}</p>
                   </div>
                 </div>
@@ -181,16 +203,20 @@ const RecallPage = () => {
                   <div className="flex items-center space-x-3">
                     <Phone className="h-5 w-5 text-earth-600" />
                     <div>
-                      <p className="font-medium text-earth-900">Recall Hotline</p>
+                      <p className="font-medium text-earth-900">
+                        Recall Hotline
+                      </p>
                       <p className="text-earth-600">{recall.contactInfo}</p>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-3">
                     <Mail className="h-5 w-5 text-earth-600" />
                     <div>
-                      <p className="font-medium text-earth-900">Email Support</p>
-                      <p className="text-earth-600">recalls@herbtrace.com</p>
+                      <p className="font-medium text-earth-900">
+                        Email Support
+                      </p>
+                      <p className="text-earth-600">recalls@ayurphoria.com</p>
                     </div>
                   </div>
                 </div>
@@ -211,20 +237,26 @@ const RecallPage = () => {
                       variant="danger"
                       onClick={() => {
                         navigator.clipboard.writeText(recall.contactInfo);
-                        toast.success('Contact information copied to clipboard');
+                        toast.success(
+                          "Contact information copied to clipboard"
+                        );
                       }}
                       className="w-full flex items-center justify-center space-x-2"
                     >
                       <Phone className="h-4 w-4" />
                       <span>Copy Contact Info</span>
                     </Button>
-                    
+
                     <Button
                       variant="outline"
                       onClick={() => {
                         const subject = `Recall Inquiry - Batch ${batchCode}`;
                         const body = `I have a product from batch ${batchCode} and need assistance with the recall.`;
-                        window.open(`mailto:recalls@herbtrace.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+                        window.open(
+                          `mailto:recalls@ayurphoria.com?subject=${encodeURIComponent(
+                            subject
+                          )}&body=${encodeURIComponent(body)}`
+                        );
                       }}
                       className="w-full flex items-center justify-center space-x-2"
                     >
@@ -235,16 +267,16 @@ const RecallPage = () => {
                 ) : (
                   <Button
                     variant="outline"
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate("/")}
                     className="w-full"
                   >
                     Continue Shopping
                   </Button>
                 )}
-                
+
                 <Button
                   variant="ghost"
-                  onClick={() => navigate('/scan')}
+                  onClick={() => navigate("/scan")}
                   className="w-full flex items-center justify-center space-x-2"
                 >
                   <ExternalLink className="h-4 w-4" />

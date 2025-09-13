@@ -1,12 +1,12 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
-import HomePage from './pages/HomePage';
-import ScanPage from './pages/ScanPage';
-import ProductPage from './pages/ProductPage';
-import RecallPage from './pages/RecallPage';
-import AboutPage from './pages/AboutPage';
-import Layout from './components/Layout';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
+import HomePage from "./pages/HomePage";
+import ScanPage from "./pages/ScanPage";
+import ProductPage from "./pages/ProductPage";
+import RecallPage from "./pages/RecallPage";
+import AboutPage from "./pages/AboutPage";
+import Layout from "./components/Layout";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -37,8 +37,8 @@ function App() {
             toastOptions={{
               duration: 4000,
               style: {
-                background: '#363636',
-                color: '#fff',
+                background: "#363636",
+                color: "#fff",
               },
             }}
           />

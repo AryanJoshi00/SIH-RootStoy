@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
-import { BrowserMultiFormatReader } from '@zxing/browser';
-import { Camera, X, AlertCircle } from 'lucide-react';
-import Button from './ui/Button';
-import Toast from './ui/Toast';
+import { useState, useRef, useEffect, useCallback } from "react";
+import { BrowserMultiFormatReader } from "@zxing/browser";
+import { Camera, X, AlertCircle } from "lucide-react";
+import Button from "./ui/Button";
+import Toast from "./ui/Toast";
 
 const QRScanner = ({ onScan, onClose, isOpen = false }) => {
   const [isScanning, setIsScanning] = useState(false);
@@ -10,6 +10,68 @@ const QRScanner = ({ onScan, onClose, isOpen = false }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const videoRef = useRef(null);
   const readerRef = useRef(null);
+
+  const stopScanning = useCallback(() => {
+    if (readerRef.current) {
+      readerRef.current.reset();
+    }
+    setIsScanning(false);
+  }, []);
+
+  const startScanning = useCallback(async () => {
+    if (!readerRef.current) return;
+
+    try {
+      setIsScanning(true);
+      setError(null);
+
+      await readerRef.current.decodeFromVideoDevice(
+        undefined, // Use default camera
+        videoRef.current,
+        (result, error) => {
+          if (result) {
+            const code = result.getText();
+            console.log("QR Code detected:", code);
+            onScan(code);
+            // Stop scanning after successful scan
+            if (readerRef.current) {
+              readerRef.current.reset();
+            }
+            setIsScanning(false);
+          }
+          if (error && error.name !== "NotFoundException") {
+            console.error("Scan error:", error);
+          }
+        }
+      );
+    } catch (err) {
+      console.error("Scanning error:", err);
+      setError("Failed to start camera scanning");
+      setIsScanning(false);
+    }
+  }, [onScan]);
+
+  const initializeScanner = useCallback(async () => {
+    try {
+      readerRef.current = new BrowserMultiFormatReader();
+      setError(null);
+      setHasPermission(null);
+
+      // Check for camera permission
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }, // Use back camera on mobile
+      });
+
+      setHasPermission(true);
+      stream.getTracks().forEach((track) => track.stop()); // Stop the test stream
+
+      startScanning();
+    } catch (err) {
+      console.error("Scanner initialization error:", err);
+      setError("Camera access denied or not available");
+      setHasPermission(false);
+    }
+  }, [startScanning]);
 
   useEffect(() => {
     if (isOpen) {
@@ -21,65 +83,7 @@ const QRScanner = ({ onScan, onClose, isOpen = false }) => {
     return () => {
       stopScanning();
     };
-  }, [isOpen]);
-
-  const initializeScanner = async () => {
-    try {
-      readerRef.current = new BrowserMultiFormatReader();
-      setError(null);
-      setHasPermission(null);
-      
-      // Check for camera permission
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment' } // Use back camera on mobile
-      });
-      
-      setHasPermission(true);
-      stream.getTracks().forEach(track => track.stop()); // Stop the test stream
-      
-      startScanning();
-    } catch (err) {
-      console.error('Scanner initialization error:', err);
-      setError('Camera access denied or not available');
-      setHasPermission(false);
-    }
-  };
-
-  const startScanning = async () => {
-    if (!readerRef.current) return;
-
-    try {
-      setIsScanning(true);
-      setError(null);
-
-      const result = await readerRef.current.decodeFromVideoDevice(
-        undefined, // Use default camera
-        videoRef.current,
-        (result, error) => {
-          if (result) {
-            const code = result.getText();
-            console.log('QR Code detected:', code);
-            onScan(code);
-            stopScanning();
-          }
-          if (error && error.name !== 'NotFoundException') {
-            console.error('Scan error:', error);
-          }
-        }
-      );
-    } catch (err) {
-      console.error('Scanning error:', err);
-      setError('Failed to start camera scanning');
-      setIsScanning(false);
-    }
-  };
-
-  const stopScanning = () => {
-    if (readerRef.current) {
-      readerRef.current.reset();
-    }
-    setIsScanning(false);
-  };
+  }, [isOpen, initializeScanner, stopScanning]);
 
   const handleRetry = () => {
     setError(null);
@@ -111,7 +115,8 @@ const QRScanner = ({ onScan, onClose, isOpen = false }) => {
                 Camera Access Required
               </h3>
               <p className="text-earth-600 mb-6">
-                Please allow camera access to scan QR codes. You can enable it in your browser settings.
+                Please allow camera access to scan QR codes. You can enable it
+                in your browser settings.
               </p>
               <Button onClick={handleRetry} variant="primary">
                 Try Again
@@ -160,11 +165,7 @@ const QRScanner = ({ onScan, onClose, isOpen = false }) => {
 
               {/* Controls */}
               <div className="flex gap-3">
-                <Button
-                  onClick={onClose}
-                  variant="outline"
-                  className="flex-1"
-                >
+                <Button onClick={onClose} variant="outline" className="flex-1">
                   Cancel
                 </Button>
                 {!isScanning && (

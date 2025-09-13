@@ -1,46 +1,160 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   * {
-    @apply border-earth-200;
+    @apply border-herb-200;
   }
-  
+
   body {
-    @apply bg-earth-50 text-earth-900 font-sans;
+    @apply bg-gradient-to-br from-herb-50 via-mint-50 to-earth-50 text-herb-900 font-sans;
     margin: 0;
     min-height: 100vh;
+    background-attachment: fixed;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-display;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 py-3 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2;
+    @apply bg-gradient-to-r from-herb-500 to-mint-500 hover:from-herb-600 hover:to-mint-600 text-white font-medium px-6 py-3 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-herb-400 focus:ring-offset-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
   }
-  
+
   .btn-secondary {
-    @apply bg-earth-200 hover:bg-earth-300 text-earth-800 font-medium px-6 py-3 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-earth-400 focus:ring-offset-2;
+    @apply bg-gradient-to-r from-earth-200 to-earth-300 hover:from-earth-300 hover:to-earth-400 text-herb-800 font-medium px-6 py-3 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-earth-400 focus:ring-offset-2 shadow-md hover:shadow-lg;
   }
-  
+
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-earth-200 p-6;
+    @apply bg-gradient-card backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6 hover:shadow-xl transition-all duration-300;
   }
-  
+
+  .card-glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 24px rgba(50, 183, 104, 0.15);
+    border-radius: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    @apply p-6 hover:bg-white/90 transition-all duration-300;
+  }
+
+  .card-organic {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(50, 183, 104, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    border-radius: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    @apply p-8 hover:shadow-2xl transition-all duration-500;
+  }
+
   .badge-success {
-    @apply bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium;
+    @apply bg-gradient-to-r from-herb-100 to-mint-100 text-herb-800 px-3 py-1 rounded-full text-sm font-medium border border-herb-200/50;
   }
-  
+
   .badge-warning {
-    @apply bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm font-medium;
+    @apply bg-gradient-to-r from-amber-100 to-amber-200 text-amber-800 px-3 py-1 rounded-full text-sm font-medium border border-amber-200/50;
   }
-  
+
   .badge-error {
-    @apply bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium;
+    @apply bg-gradient-to-r from-red-100 to-red-200 text-red-800 px-3 py-1 rounded-full text-sm font-medium border border-red-200/50;
+  }
+
+  .badge-blockchain {
+    @apply bg-gradient-to-r from-blockchain-100 to-blockchain-200 text-blockchain-800 px-3 py-1 rounded-full text-sm font-medium border border-blockchain-200/50;
+  }
+
+  .hero-gradient {
+    @apply bg-gradient-hero;
+  }
+
+  .floating-leaf {
+    @apply animate-leaf-float;
+  }
+
+  .blockchain-glow {
+    @apply animate-blockchain-pulse;
+  }
+
+  .organic-blob {
+    @apply absolute rounded-full opacity-20 blur-xl;
+  }
+
+  .organic-shape {
+    @apply absolute opacity-10 blur-2xl;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+
+  .text-gradient-herbal {
+    background: linear-gradient(135deg, #32b768 0%, #4cc47a 50%, #ffd580 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(50, 183, 104, 0.3);
+  }
+
+  .btn-scan {
+    position: relative;
+    overflow: hidden;
+    @apply bg-gradient-to-r from-herb-500 to-mint-500 hover:from-herb-600 hover:to-mint-600 text-white font-medium px-8 py-4 rounded-2xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-herb-400 focus:ring-offset-2 shadow-2xl hover:shadow-2xl transform hover:-translate-y-1;
+  }
+
+  .btn-scan::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+
+  .btn-scan:active::before {
+    width: 300px;
+    height: 300px;
+  }
+
+  .trust-badge {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(50, 183, 104, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    @apply rounded-full px-4 py-2;
+  }
+
+  /* Tech Animations */
+  @keyframes grid-move {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(40px, 40px);
+    }
+  }
+
+  @keyframes tech-pulse {
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+
+  .tech-pulse {
+    animation: tech-pulse 3s ease-in-out infinite;
   }
 }

@@ -1,34 +1,44 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, QrCode, Home, Info, Shield } from 'lucide-react';
-import Button from './ui/Button';
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, QrCode, Home, Info, Shield, Leaf, Lock } from "lucide-react";
+import Button from "./ui/Button";
 
 const Layout = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
   const navigation = [
-    { name: 'Home', href: '/', icon: Home },
-    { name: 'Scan', href: '/scan', icon: QrCode },
-    { name: 'About', href: '/about', icon: Info },
+    { name: "Home", href: "/", icon: Home },
+    { name: "Scan", href: "/scan", icon: QrCode },
+    { name: "About", href: "/about", icon: Info },
   ];
 
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-earth-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-earth-200 sticky top-0 z-40">
+      <header className="bg-white/90 backdrop-blur-md shadow-lg border-b border-herb-200/30 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
-                <Shield className="h-5 w-5 text-white" />
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="relative">
+                <div className="w-12 h-12 bg-herb-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                  <Leaf className="h-7 w-7 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+                  <Lock className="h-3 w-3 text-white" />
+                </div>
               </div>
-              <span className="text-xl font-display font-bold text-earth-900">
-                HerbTrace
-              </span>
+              <div>
+                <span className="text-2xl font-display font-bold text-herb-700">
+                  AYURPHORIA
+                </span>
+                <p className="text-xs text-herb-600 font-medium -mt-1">
+                  No ayurphobia, only Ayurphoria
+                </p>
+              </div>
             </Link>
 
             {/* Desktop Navigation */}
@@ -39,10 +49,10 @@ const Layout = ({ children }) => {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                       isActive(item.href)
-                        ? 'bg-emerald-100 text-emerald-700'
-                        : 'text-earth-600 hover:text-earth-900 hover:bg-earth-100'
+                        ? "bg-gradient-to-r from-herb-100 to-mint-100 text-herb-700 shadow-md"
+                        : "text-herb-600 hover:text-herb-900 hover:bg-gradient-to-r hover:from-herb-50 hover:to-mint-50 hover:shadow-sm"
                     }`}
                   >
                     <Icon className="h-4 w-4" />
@@ -79,8 +89,8 @@ const Layout = ({ children }) => {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       isActive(item.href)
-                        ? 'bg-emerald-100 text-emerald-700'
-                        : 'text-earth-600 hover:text-earth-900 hover:bg-earth-100'
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "text-earth-600 hover:text-earth-900 hover:bg-earth-100"
                     }`}
                   >
                     <Icon className="h-4 w-4" />
@@ -94,57 +104,121 @@ const Layout = ({ children }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1">
-        {children}
-      </main>
+      <main className="flex-1">{children}</main>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-earth-200 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-6 h-6 bg-emerald-600 rounded flex items-center justify-center">
-                  <Shield className="h-4 w-4 text-white" />
+      <footer className="bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 border-t border-slate-600/20 mt-0 backdrop-blur-sm relative overflow-hidden">
+        {/* Subtle Background Pattern */}
+        <div className="absolute inset-0 opacity-3">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.1) 1px, transparent 0)`,
+              backgroundSize: "40px 40px",
+            }}
+          ></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Brand Section */}
+            <div className="md:col-span-2">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+                  <Leaf className="h-6 w-6 text-white" />
                 </div>
-                <span className="text-lg font-display font-bold text-earth-900">
-                  HerbTrace
+                <span className="text-2xl font-display font-bold text-white">
+                  AYURPHORIA
                 </span>
               </div>
-              <p className="text-earth-600 text-sm">
-                Transparent, blockchain-verified provenance for Ayurvedic herbs.
+              <p className="text-slate-300 text-base leading-relaxed mb-6 max-w-md">
+                No ayurphobia, only Ayurphoria. Transparent, blockchain-verified
+                provenance for Ayurvedic herbs with cutting-edge technology.
               </p>
+              <div className="flex space-x-4">
+                <div className="w-8 h-8 bg-slate-700 rounded-lg flex items-center justify-center hover:bg-slate-600 transition-colors cursor-pointer">
+                  <span className="text-xs text-slate-300">f</span>
+                </div>
+                <div className="w-8 h-8 bg-slate-700 rounded-lg flex items-center justify-center hover:bg-slate-600 transition-colors cursor-pointer">
+                  <span className="text-xs text-slate-300">t</span>
+                </div>
+                <div className="w-8 h-8 bg-slate-700 rounded-lg flex items-center justify-center hover:bg-slate-600 transition-colors cursor-pointer">
+                  <span className="text-xs text-slate-300">in</span>
+                </div>
+              </div>
             </div>
-            
+
+            {/* Quick Links */}
             <div>
-              <h3 className="text-sm font-semibold text-earth-900 mb-4">Quick Links</h3>
-              <div className="space-y-2">
-                <Link to="/scan" className="block text-sm text-earth-600 hover:text-earth-900">
+              <h3 className="text-lg font-semibold text-white mb-6">
+                Quick Links
+              </h3>
+              <div className="space-y-3">
+                <Link
+                  to="/scan"
+                  className="block text-slate-300 hover:text-white transition-colors text-sm"
+                >
                   Scan QR Code
                 </Link>
-                <Link to="/about" className="block text-sm text-earth-600 hover:text-earth-900">
+                <Link
+                  to="/about"
+                  className="block text-slate-300 hover:text-white transition-colors text-sm"
+                >
                   About Us
                 </Link>
-                <Link to="/recall/D999XX" className="block text-sm text-earth-600 hover:text-earth-900">
+                <Link
+                  to="/recall/D999XX"
+                  className="block text-slate-300 hover:text-white transition-colors text-sm"
+                >
                   Recall Check
+                </Link>
+                <Link
+                  to="/"
+                  className="block text-slate-300 hover:text-white transition-colors text-sm"
+                >
+                  Home
                 </Link>
               </div>
             </div>
-            
+
+            {/* Contact Info */}
             <div>
-              <h3 className="text-sm font-semibold text-earth-900 mb-4">Contact</h3>
-              <div className="space-y-2 text-sm text-earth-600">
-                <p>Email: info@herbtrace.com</p>
-                <p>Phone: +91 98765 43210</p>
-                <p>Support: 24/7 Available</p>
+              <h3 className="text-lg font-semibold text-white mb-6">Contact</h3>
+              <div className="space-y-3 text-sm text-slate-300">
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                  <span>info@ayurphoria.com</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-emerald-500 rounded-full"></div>
+                  <span>+91 98765 43210</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-amber-500 rounded-full"></div>
+                  <span>24/7 Support</span>
+                </div>
               </div>
             </div>
           </div>
-          
-          <div className="border-t border-earth-200 mt-8 pt-8 text-center">
-            <p className="text-sm text-earth-600">
-              © 2025 HerbTrace. All rights reserved. Built for SIH Hackathon.
-            </p>
+
+          <div className="border-t border-slate-700/50 mt-12 pt-8">
+            <div className="text-center">
+              <p className="text-sm text-slate-400 mb-4">
+                © 2025 AYURPHORIA. All rights reserved. Built with ❤️ for SIH
+                Hackathon 2025.
+              </p>
+              <div className="flex justify-center space-x-6 text-sm text-slate-400">
+                <span className="hover:text-white transition-colors cursor-pointer">
+                  Privacy Policy
+                </span>
+                <span className="hover:text-white transition-colors cursor-pointer">
+                  Terms of Service
+                </span>
+                <span className="hover:text-white transition-colors cursor-pointer">
+                  Cookie Policy
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </footer>

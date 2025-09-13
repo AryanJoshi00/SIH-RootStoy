@@ -1,17 +1,20 @@
-import { useEffect, useRef } from 'react';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import { MapPin } from 'lucide-react';
+import { useEffect, useRef } from "react";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { MapPin } from "lucide-react";
 
 // Fix for default markers in Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  iconRetinaUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+  iconUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-const GeoMap = ({ events = [], className = '' }) => {
+const GeoMap = ({ events = [], className = "" }) => {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
 
@@ -23,14 +26,14 @@ const GeoMap = ({ events = [], className = '' }) => {
     mapInstanceRef.current = map;
 
     // Add tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap contributors",
     }).addTo(map);
 
     // Create custom icons for different roles
     const createCustomIcon = (role, color) => {
       return L.divIcon({
-        className: 'custom-div-icon',
+        className: "custom-div-icon",
         html: `
           <div style="
             background-color: ${color};
@@ -50,36 +53,46 @@ const GeoMap = ({ events = [], className = '' }) => {
           </div>
         `,
         iconSize: [30, 30],
-        iconAnchor: [15, 15]
+        iconAnchor: [15, 15],
       });
     };
 
     const getRoleInitial = (role) => {
       switch (role.toLowerCase()) {
-        case 'farmer': return 'F';
-        case 'processor': return 'P';
-        case 'lab': return 'L';
-        case 'distributor': return 'D';
-        default: return '?';
+        case "farmer":
+          return "F";
+        case "processor":
+          return "P";
+        case "lab":
+          return "L";
+        case "distributor":
+          return "D";
+        default:
+          return "?";
       }
     };
 
     const getRoleColor = (role) => {
       switch (role.toLowerCase()) {
-        case 'farmer': return '#10b981'; // emerald-500
-        case 'processor': return '#3b82f6'; // blue-500
-        case 'lab': return '#8b5cf6'; // purple-500
-        case 'distributor': return '#f59e0b'; // amber-500
-        default: return '#6b7280'; // gray-500
+        case "farmer":
+          return "#10b981"; // emerald-500
+        case "processor":
+          return "#3b82f6"; // blue-500
+        case "lab":
+          return "#8b5cf6"; // purple-500
+        case "distributor":
+          return "#f59e0b"; // amber-500
+        default:
+          return "#6b7280"; // gray-500
       }
     };
 
     // Add markers for each event
     const markers = [];
-    events.forEach((event, index) => {
+    events.forEach((event) => {
       if (event.lat && event.lng) {
         const marker = L.marker([event.lat, event.lng], {
-          icon: createCustomIcon(event.role, getRoleColor(event.role))
+          icon: createCustomIcon(event.role, getRoleColor(event.role)),
         }).addTo(map);
 
         // Add popup with event details
@@ -87,8 +100,14 @@ const GeoMap = ({ events = [], className = '' }) => {
           <div class="p-2">
             <div class="font-semibold text-sm mb-1">${event.role}</div>
             <div class="text-xs text-gray-600 mb-1">${event.locationName}</div>
-            <div class="text-xs text-gray-500">${new Date(event.date).toLocaleDateString()}</div>
-            ${event.description ? `<div class="text-xs text-gray-700 mt-1">${event.description}</div>` : ''}
+            <div class="text-xs text-gray-500">${new Date(
+              event.date
+            ).toLocaleDateString()}</div>
+            ${
+              event.description
+                ? `<div class="text-xs text-gray-700 mt-1">${event.description}</div>`
+                : ""
+            }
           </div>
         `;
         marker.bindPopup(popupContent);
@@ -113,7 +132,9 @@ const GeoMap = ({ events = [], className = '' }) => {
 
   if (!events || events.length === 0) {
     return (
-      <div className={`bg-earth-100 rounded-lg flex items-center justify-center h-64 ${className}`}>
+      <div
+        className={`bg-earth-100 rounded-lg flex items-center justify-center h-64 ${className}`}
+      >
         <div className="text-center">
           <MapPin className="h-8 w-8 text-earth-400 mx-auto mb-2" />
           <p className="text-earth-600">No location data available</p>
@@ -123,7 +144,9 @@ const GeoMap = ({ events = [], className = '' }) => {
   }
 
   return (
-    <div className={`rounded-lg overflow-hidden border border-earth-200 ${className}`}>
+    <div
+      className={`rounded-lg overflow-hidden border border-earth-200 ${className}`}
+    >
       <div ref={mapRef} className="w-full h-64" />
     </div>
   );
