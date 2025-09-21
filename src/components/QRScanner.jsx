@@ -8,36 +8,77 @@ const QRScanner = ({ onScan, onClose, isOpen = false }) => {
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
+  const [scanSuccess, setScanSuccess] = useState(false);
   const videoRef = useRef(null);
   const readerRef = useRef(null);
+  const streamRef = useRef(null);
+  const isProcessingRef = useRef(false);
 
   const stopScanning = useCallback(() => {
-    if (readerRef.current) {
-      readerRef.current.reset();
+    console.log("Stopping scanner...");
+    
+    // Stop camera stream first
+    if (streamRef.current) {
+      console.log("Stopping camera stream...");
+      streamRef.current.getTracks().forEach(track => {
+        console.log("Stopping track:", track.kind);
+        track.stop();
+      });
+      streamRef.current = null;
     }
+    
+    // Reset scanner
+    if (readerRef.current) {
+      try {
+        readerRef.current.reset();
+        readerRef.current = null;
+      } catch (error) {
+        console.log("Scanner reset error:", error);
+      }
+    }
+    
     setIsScanning(false);
+    setError(null);
+    setScanSuccess(false);
+    isProcessingRef.current = false;
   }, []);
 
   const startScanning = useCallback(async () => {
-    if (!readerRef.current) return;
+    if (!readerRef.current || isProcessingRef.current) return;
 
     try {
+      console.log("Starting scanning...");
       setIsScanning(true);
       setError(null);
+      isProcessingRef.current = true;
 
       await readerRef.current.decodeFromVideoDevice(
         undefined, // Use default camera
         videoRef.current,
         (result, error) => {
-          if (result) {
-            const code = result.getText();
+          if (result && isProcessingRef.current) {
+            const code = result.getText().trim();
             console.log("QR Code detected:", code);
-            onScan(code);
-            // Stop scanning after successful scan
-            if (readerRef.current) {
-              readerRef.current.reset();
+            
+            // Validate the code format (should be like A123XY, B456YZ, etc.)
+            const isValidCode = /^[A-Z]\d{3}[A-Z]{2}$/.test(code);
+            
+            if (isValidCode) {
+              console.log("Valid code found, processing...");
+              isProcessingRef.current = false;
+              setScanSuccess(true);
+              
+              // Stop everything immediately
+              stopScanning();
+              
+              // Close scanner immediately and call onScan
+              setTimeout(() => {
+                onClose(); // Close the scanner popup
+                onScan(code); // Process the scan
+              }, 100);
+            } else {
+              console.log("Invalid QR code format:", code);
             }
-            setIsScanning(false);
           }
           if (error && error.name !== "NotFoundException") {
             console.error("Scan error:", error);
@@ -48,24 +89,41 @@ const QRScanner = ({ onScan, onClose, isOpen = false }) => {
       console.error("Scanning error:", err);
       setError("Failed to start camera scanning");
       setIsScanning(false);
+      isProcessingRef.current = false;
     }
-  }, [onScan]);
+  }, [onScan, stopScanning]);
 
   const initializeScanner = useCallback(async () => {
     try {
+      console.log("Initializing scanner...");
+      
+      // Clean up any existing scanner
+      if (readerRef.current) {
+        try {
+          readerRef.current.reset();
+        } catch (e) {
+          console.log("Reset error during init:", e);
+        }
+      }
+      
       readerRef.current = new BrowserMultiFormatReader();
       setError(null);
       setHasPermission(null);
+      setScanSuccess(false);
+      isProcessingRef.current = false;
 
-      // Check for camera permission
+      // Get camera stream and store it
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment" }, // Use back camera on mobile
       });
 
+      streamRef.current = stream;
       setHasPermission(true);
-      stream.getTracks().forEach((track) => track.stop()); // Stop the test stream
 
-      startScanning();
+      // Start scanning after a short delay
+      setTimeout(() => {
+        startScanning();
+      }, 500);
     } catch (err) {
       console.error("Scanner initialization error:", err);
       setError("Camera access denied or not available");
@@ -75,19 +133,49 @@ const QRScanner = ({ onScan, onClose, isOpen = false }) => {
 
   useEffect(() => {
     if (isOpen) {
+      console.log("Scanner opening...");
       initializeScanner();
     } else {
+      console.log("Scanner closing...");
       stopScanning();
     }
 
     return () => {
+      console.log("Scanner cleanup...");
       stopScanning();
     };
   }, [isOpen, initializeScanner, stopScanning]);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (readerRef.current) {
+        try {
+          readerRef.current.reset();
+        } catch (error) {
+          console.log("Cleanup error:", error);
+        }
+      }
+      
+      // Stop camera stream on unmount
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => {
+          track.stop();
+        });
+        streamRef.current = null;
+      }
+    };
+  }, []);
+
   const handleRetry = () => {
+    console.log("Retrying scanner...");
     setError(null);
-    initializeScanner();
+    setScanSuccess(false);
+    isProcessingRef.current = false;
+    stopScanning();
+    setTimeout(() => {
+      initializeScanner();
+    }, 100);
   };
 
   if (!isOpen) return null;
@@ -168,7 +256,11 @@ const QRScanner = ({ onScan, onClose, isOpen = false }) => {
                 <Button onClick={onClose} variant="outline" className="flex-1">
                   Cancel
                 </Button>
-                {!isScanning && (
+                {scanSuccess ? (
+                  <div className="flex-1 flex items-center justify-center text-green-600 font-medium">
+                    ✓ Scan Successful!
+                  </div>
+                ) : !isScanning ? (
                   <Button
                     onClick={startScanning}
                     variant="primary"
@@ -176,6 +268,10 @@ const QRScanner = ({ onScan, onClose, isOpen = false }) => {
                   >
                     Start Scanning
                   </Button>
+                ) : (
+                  <div className="flex-1 flex items-center justify-center text-blue-600 font-medium">
+                    Scanning...
+                  </div>
                 )}
               </div>
             </div>

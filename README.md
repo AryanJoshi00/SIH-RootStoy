@@ -1,4 +1,4 @@
-# HerbTrace - Ayurvedic Herbs Blockchain Verification Platform
+# RootStory - Ayurvedic Herbs Blockchain Verification Platform
 
 A consumer-facing web application for Ayurvedic herbal products that offers transparent, trusted, blockchain-verified provenance data accessed via QR codes on packaging.
 
@@ -44,7 +44,7 @@ A consumer-facing web application for Ayurvedic herbal products that offers tran
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd ayurvedic-herbs-app
+   cd rootstory-app
    ```
 
 2. **Install dependencies**
@@ -134,7 +134,7 @@ Built for the Smart India Hackathon 2025, this project demonstrates:
 ## 📞 Support
 
 For questions or support, contact:
-- Email: info@herbtrace.com
+- Email: info@rootstory.com
 - Phone: +91 98765 43210
 
 ---

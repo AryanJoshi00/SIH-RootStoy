@@ -1,371 +1,418 @@
+import { useState, useEffect, useRef } from "react";
 import {
+  Leaf,
   Shield,
-  Lock,
   Globe,
   Users,
   Award,
-  Heart,
-  Code,
+  Zap,
   Database,
   Cloud,
-  Zap,
-  Layers,
-  Cpu,
+  Lock,
+  TestTube,
+  MapPin,
+  CheckCircle,
+  QrCode,
+  Code,
+  Container,
   Server,
-  GitBranch,
 } from "lucide-react";
-import { Card, CardContent, CardHeader } from "../components/ui/Card";
-import Badge from "../components/ui/Badge";
 
-const AboutPage = () => {
-  const features = [
-    {
-      icon: Shield,
-      title: "Blockchain Security",
-      description:
-        "Every product is verified through tamper-proof blockchain technology ensuring complete transparency and authenticity.",
-    },
-    {
-      icon: Lock,
-      title: "Data Privacy",
-      description:
-        "Your personal information is protected with enterprise-grade encryption and privacy-first design principles.",
-    },
-    {
-      icon: Globe,
-      title: "Global Traceability",
-      description:
-        "Track products from their origin farms across different countries with real-time location data.",
-    },
-    {
-      icon: Users,
-      title: "Community Trust",
-      description:
-        "Built by and for the Ayurvedic community to ensure traditional knowledge meets modern transparency.",
-    },
-  ];
+const About = () => {
+  const [counters, setCounters] = useState({
+    productsVerified: 0,
+    farmersConnected: 0,
+    countriesReached: 0,
+    labTestsConducted: 0,
+  });
+
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const impactSectionRef = useRef(null);
+
+  const targetCounters = {
+    productsVerified: 125000,
+    farmersConnected: 2500,
+    countriesReached: 45,
+    labTestsConducted: 50000,
+  };
+
+  // Animate counters when section comes into view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+            
+            const duration = 2000; // 2 seconds
+            const steps = 60;
+            const stepDuration = duration / steps;
+
+            const animateCounter = (key, target) => {
+              let current = 0;
+              const increment = target / steps;
+              const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                  current = target;
+                  clearInterval(timer);
+                }
+                setCounters((prev) => ({ ...prev, [key]: Math.floor(current) }));
+              }, stepDuration);
+            };
+
+            Object.entries(targetCounters).forEach(([key, target]) => {
+              animateCounter(key, target);
+            });
+          }
+        });
+      },
+      { threshold: 0.3 } // Trigger when 30% of the section is visible
+    );
+
+    if (impactSectionRef.current) {
+      observer.observe(impactSectionRef.current);
+    }
+
+    return () => {
+      if (impactSectionRef.current) {
+        observer.unobserve(impactSectionRef.current);
+      }
+    };
+  }, [hasAnimated]);
 
   const team = [
     {
-      name: "Dr. Priya Sharma",
-      role: "Ayurvedic Expert",
+      name: "Arshad Shaikh",
+      role: "React Native App Developer",
       description:
-        "15+ years in traditional medicine and herb quality assessment.",
+        "Expert in mobile app development and cross-platform solutions",
     },
     {
-      name: "Rajesh Kumar",
-      role: "Blockchain Developer",
+      name: "Aryan Joshi",
+      role: "React Web Developer, UI/UX Developer",
       description:
-        "Expert in distributed systems and supply chain transparency.",
+        "Specialist in modern web technologies and user experience design",
     },
     {
-      name: "Anita Patel",
-      role: "Sustainability Lead",
+      name: "Bhavik Thakkar",
+      role: "Blockchain / Hyperledger Fabric Specialist",
       description:
-        "Passionate about ethical sourcing and environmental impact.",
+        "Expert in distributed systems and blockchain technology implementation",
+    },
+    {
+      name: "Brahmi Matey",
+      role: "AI Integrator, Full Stack Developer",
+      description:
+        "AI and machine learning integration specialist with full-stack expertise",
+    },
+    {
+      name: "Mrunal Shah",
+      role: "Team Co-ordinator",
+      description: "Valuable team member contributing to project success",
+    },
+    {
+      name: "Pranjal Chaudhari",
+      role: "Team Leader, Full Stack Developer",
+      description:
+        "Project leader with comprehensive full-stack development expertise",
     },
   ];
 
-  const stats = [
-    { label: "Products Verified", value: "10,000+" },
-    { label: "Farmers Connected", value: "500+" },
-    { label: "Countries Covered", value: "15+" },
-    { label: "Lab Tests Conducted", value: "50,000+" },
+  const techStack = [
+    { name: "React", icon: "⚛️", description: "Frontend Framework" },
+    { name: "Express.js", icon: "🚀", description: "Backend Framework" },
+    { name: "Node.js", icon: "🟢", description: "Backend Runtime" },
+    { name: "Go", icon: "🔵", description: "Programming Language" },
+    { name: "MongoDB", icon: "🍃", description: "Database" },
+    { name: "Blockchain", icon: "⛓️", description: "Distributed Ledger" },
+    { name: "Docker", icon: "🐳", description: "Containerization" },
+    { name: "FHIR", icon: "🏥", description: "Healthcare Standards" },
+    { name: "REST API", icon: "🔗", description: "API Integration" },
+    { name: "Red Hat OpenShift", icon: "☁️", description: "Cloud Platform" },
+  ];
+
+  const highlights = [
+    {
+      icon: Shield,
+      title: "Blockchain Security",
+      description: "Immutable records ensure tamper-proof traceability",
+    },
+    {
+      icon: Leaf,
+      title: "Transparency",
+      description: "Complete visibility into every step of the supply chain",
+    },
+    {
+      icon: Globe,
+      title: "Sustainability",
+      description: "Promoting eco-friendly and ethical farming practices",
+    },
+    {
+      icon: Users,
+      title: "Global Reach",
+      description: "Connecting farmers and consumers worldwide",
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-earth-50 py-20 px-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Hero Section */}
-        <section className="text-center mb-20">
-          <div className="w-24 h-24 bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 animate-pulse-glow shadow-2xl">
-            <Shield className="h-12 w-12 text-white animate-float" />
-          </div>
-          <h1 className="text-5xl md:text-6xl font-display font-bold text-earth-900 mb-8 animate-fade-in-up">
-            About AYURPHORIA
+    <div className="min-h-screen bg-neutral-warm">
+      {/* Hero Section */}
+      <section className="py-20 bg-gradient-to-br from-herb-500 to-herb-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-5xl md:text-6xl font-display font-bold mb-6">
+            About ROOTSTORY
           </h1>
-          <p
-            className="text-xl text-earth-600 max-w-4xl mx-auto leading-relaxed animate-fade-in-up"
-            style={{ animationDelay: "0.2s" }}
-          >
-            We're revolutionizing the Ayurvedic herb industry by providing
-            complete transparency and traceability through blockchain
-            technology. Every herb tells a story, and we make sure you can trust
-            every chapter.
+          <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
+            We're revolutionizing the Ayurvedic industry by combining ancient
+            wisdom with cutting-edge blockchain technology to ensure complete
+            transparency and trust in every product.
           </p>
-        </section>
+        </div>
+      </section>
 
-        {/* Mission Section */}
-        <section className="mb-20">
-          <Card className="bg-emerald-50 border-emerald-200">
-            <CardContent>
-              <div className="text-center py-16">
-                <div className="w-20 h-20 bg-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-lg">
-                  <Heart className="h-10 w-10 text-white" />
-                </div>
-                <h2 className="text-3xl font-display font-bold text-earth-900 mb-6">
-                  Our Mission
-                </h2>
-                <p className="text-lg text-earth-600 max-w-4xl mx-auto leading-relaxed">
-                  To restore trust in the Ayurvedic herb supply chain by
-                  providing consumers with complete transparency about the
-                  origin, quality, and journey of their herbs. We believe that
-                  traditional medicine deserves modern verification.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Features Section */}
-        <section className="mb-20">
+      {/* Mission Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-display font-bold text-earth-900 mb-6">
-              Why AYURPHORIA?
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-6">
+              Our Mission
             </h2>
-            <p className="text-lg text-earth-600 max-w-3xl mx-auto">
-              We combine traditional Ayurvedic wisdom with cutting-edge
-              technology
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto">
+              ROOTSTORY brings Ayurveda's ancient wisdom into the modern world
+              with blockchain-powered trust and transparency, ensuring every
+              herb you consume is authentic, safe, and sustainably sourced.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {highlights.map((highlight, index) => {
+              const Icon = highlight.icon;
               return (
-                <Card
+                <div
                   key={index}
-                  className="hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group bg-white/80 backdrop-blur-sm border-0 relative overflow-hidden"
-                  style={{ animationDelay: `${index * 0.1}s` }}
+                  className="card p-6 text-center group hover:scale-105 transition-all duration-300"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-herb-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <CardContent className="relative z-10">
-                    <div className="flex items-start space-x-6 p-4">
-                      <div className="w-18 h-18 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg group-hover:shadow-xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3">
-                        <Icon className="h-9 w-9 text-emerald-600 group-hover:animate-bounce" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-earth-900 mb-3 group-hover:text-emerald-700 transition-colors duration-300">
-                          {feature.title}
-                        </h3>
-                        <p className="text-earth-600 leading-relaxed group-hover:text-earth-700 transition-colors duration-300">
-                          {feature.description}
-                        </p>
-                        <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                          <div className="w-full h-1 bg-gradient-to-r from-emerald-500 to-herb-500 rounded-full"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-herb-500 to-herb-600 rounded-2xl flex items-center justify-center group-hover:animate-glow">
+                    <Icon className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-display font-semibold text-gray-900 mb-3">
+                    {highlight.title}
+                  </h3>
+                  <p className="text-gray-600">{highlight.description}</p>
+                </div>
               );
             })}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Stats Section */}
-        <section className="mb-20">
-          <Card className="bg-herb-50 border-herb-200">
-            <CardContent>
-              <div className="text-center py-16">
-                <h2 className="text-3xl font-display font-bold text-earth-900 mb-12">
-                  Our Impact
-                </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
-                  {stats.map((stat, index) => (
-                    <div key={index} className="text-center group">
-                      <div className="w-20 h-20 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
-                        <div className="text-2xl font-bold text-emerald-600">
-                          {stat.value}
-                        </div>
-                      </div>
-                      <div className="text-earth-600 font-medium">
-                        {stat.label}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Team Section */}
-        <section className="mb-20">
+      {/* Impact Counters */}
+      <section ref={impactSectionRef} className="py-20 bg-herb-500 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-display font-bold text-earth-900 mb-6">
-              Our Team
+            <h2 className="text-4xl md:text-5xl font-display font-bold mb-6">
+              Our Impact
             </h2>
-            <p className="text-lg text-earth-600 max-w-2xl mx-auto">
-              Experts in Ayurveda, technology, and sustainability
+            <p className="text-xl text-white/90">
+              Numbers that reflect our commitment to transparency and quality
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-bold mb-2">
+                {counters.productsVerified.toLocaleString()}+
+              </div>
+              <div className="text-white/90">Products Verified</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-bold mb-2">
+                {counters.farmersConnected.toLocaleString()}+
+              </div>
+              <div className="text-white/90">Farmers Connected</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-bold mb-2">
+                {counters.countriesReached}+
+              </div>
+              <div className="text-white/90">Countries Reached</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-bold mb-2">
+                {counters.labTestsConducted.toLocaleString()}+
+              </div>
+              <div className="text-white/90">Lab Tests Conducted</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-6">
+              Meet the Team Behind the Magic
+            </h2>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+              We are six innovators, dreamers, and problem-solvers who came
+              together to turn a vision into reality for the Ministry of Ayush –
+              SIH 2025 challenge. United by curiosity, caffeine, and a shared
+              passion for technology and Ayurveda, we've woven together code,
+              design, and blockchain wizardry to build a solution that traces
+              every herb from farm to formulation.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {team.map((member, index) => (
-              <Card
+              <div
                 key={index}
-                className="text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-2"
+                className="card p-6 text-center group hover:scale-105 transition-all duration-300"
               >
-                <CardContent>
-                  <div className="w-24 h-24 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-md">
-                    <Users className="h-10 w-10 text-emerald-600" />
-                  </div>
-                  <h3 className="text-xl font-bold text-earth-900 mb-2">
-                    {member.name}
-                  </h3>
-                  <Badge className="mb-4 text-sm px-4 py-2">
-                    {member.role}
-                  </Badge>
-                  <p className="text-earth-600 leading-relaxed">
-                    {member.description}
-                  </p>
-                </CardContent>
-              </Card>
+                <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-herb-500 to-herb-600 rounded-full flex items-center justify-center">
+                  <Users className="w-12 h-12 text-white" />
+                </div>
+                <h3 className="text-xl font-display font-semibold text-gray-900 mb-2">
+                  {member.name}
+                </h3>
+                <div className="text-herb-500 font-medium mb-3">
+                  {member.role}
+                </div>
+                <p className="text-gray-600 text-sm">{member.description}</p>
+              </div>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Technology Section */}
-        <section className="mb-20">
-          <Card className="bg-slate-50 border-emerald-200">
-            <CardContent>
-              <div className="py-16">
-                <div className="text-center mb-12">
-                  <div className="w-20 h-20 bg-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
-                    <Award className="h-10 w-10 text-white" />
-                  </div>
-                  <h2 className="text-3xl font-display font-bold text-earth-900 mb-4">
-                    Technology Stack
-                  </h2>
-                  <p className="text-lg text-earth-600 max-w-2xl mx-auto">
-                    Built with modern, secure, and scalable technologies that
-                    power our blockchain-verified platform
-                  </p>
-                </div>
+      {/* Tech Stack Section */}
+      <section className="py-20 bg-neutral-warm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-6">
+              Technology Stack
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Built with modern, secure, and scalable technologies to ensure
+              reliability and performance.
+            </p>
+          </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                  {[
-                    {
-                      name: "Blockchain",
-                      icon: Layers,
-                      color: "text-purple-600",
-                      bg: "bg-purple-100",
-                    },
-                    {
-                      name: "React",
-                      icon: Code,
-                      color: "text-blue-600",
-                      bg: "bg-blue-100",
-                    },
-                    {
-                      name: "Node.js",
-                      icon: Server,
-                      color: "text-green-600",
-                      bg: "bg-green-100",
-                    },
-                    {
-                      name: "PostgreSQL",
-                      icon: Database,
-                      color: "text-indigo-600",
-                      bg: "bg-indigo-100",
-                    },
-                    {
-                      name: "AWS",
-                      icon: Cloud,
-                      color: "text-orange-600",
-                      bg: "bg-orange-100",
-                    },
-                    {
-                      name: "Docker",
-                      icon: Cpu,
-                      color: "text-cyan-600",
-                      bg: "bg-cyan-100",
-                    },
-                    {
-                      name: "Kubernetes",
-                      icon: GitBranch,
-                      color: "text-blue-700",
-                      bg: "bg-blue-100",
-                    },
-                    {
-                      name: "Redis",
-                      icon: Zap,
-                      color: "text-red-600",
-                      bg: "bg-red-100",
-                    },
-                  ].map((tech, index) => {
-                    const Icon = tech.icon;
-                    return (
-                      <div key={index} className="text-center group">
-                        <div
-                          className={`w-20 h-20 ${tech.bg} rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-105`}
-                        >
-                          <Icon className={`h-8 w-8 ${tech.color}`} />
-                        </div>
-                        <span className="text-sm font-semibold text-earth-700 group-hover:text-earth-900 transition-colors">
-                          {tech.name}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
+          <div className="flex flex-wrap justify-center gap-6">
+            {techStack.map((tech, index) => (
+              <div
+                key={index}
+                className="card p-6 text-center group hover:scale-105 transition-all duration-300 w-48"
+              >
+                <div className="text-4xl mb-3">{tech.icon}</div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {tech.name}
+                </h3>
+                <p className="text-sm text-gray-600">{tech.description}</p>
               </div>
-            </CardContent>
-          </Card>
-        </section>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        {/* Contact Section */}
-        <section className="mb-20">
-          <Card className="bg-herb-50 border-herb-200">
-            <CardContent>
-              <div className="text-center py-16">
-                <h2 className="text-3xl font-display font-bold text-earth-900 mb-6">
-                  Get in Touch
-                </h2>
-                <p className="text-lg text-earth-600 mb-12 max-w-2xl mx-auto">
-                  Have questions about our platform or want to partner with us?
-                  We'd love to hear from you.
-                </p>
+      {/* Values Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-6">
+              Our Values
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              The principles that guide everything we do at ROOTSTORY
+            </p>
+          </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-3xl mx-auto">
-                  <div className="text-center group">
-                    <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
-                      <span className="text-emerald-600 font-semibold text-xl">
-                        📧
-                      </span>
-                    </div>
-                    <h3 className="font-bold text-earth-900 mb-2">Email</h3>
-                    <p className="text-earth-600">info@ayurphoria.com</p>
-                  </div>
-
-                  <div className="text-center group">
-                    <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
-                      <span className="text-emerald-600 font-semibold text-xl">
-                        📱
-                      </span>
-                    </div>
-                    <h3 className="font-bold text-earth-900 mb-2">Phone</h3>
-                    <p className="text-earth-600">+91 98765 43210</p>
-                  </div>
-
-                  <div className="text-center group">
-                    <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-105">
-                      <span className="text-emerald-600 font-semibold text-xl">
-                        🌐
-                      </span>
-                    </div>
-                    <h3 className="font-bold text-earth-900 mb-2">Website</h3>
-                    <p className="text-earth-600">www.ayurphoria.com</p>
-                  </div>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="card p-8">
+              <div className="w-12 h-12 bg-herb-500/10 rounded-lg flex items-center justify-center mb-4">
+                <Shield className="w-6 h-6 text-herb-500" />
               </div>
-            </CardContent>
-          </Card>
-        </section>
-      </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Trust & Transparency
+              </h3>
+              <p className="text-gray-600">
+                We believe in complete transparency. Every step of the supply
+                chain is recorded and verifiable on the blockchain.
+              </p>
+            </div>
+
+            <div className="card p-8">
+              <div className="w-12 h-12 bg-herb-500/10 rounded-lg flex items-center justify-center mb-4">
+                <Leaf className="w-6 h-6 text-herb-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Sustainability
+              </h3>
+              <p className="text-gray-600">
+                We're committed to promoting sustainable farming practices and
+                environmental conservation in the Ayurvedic industry.
+              </p>
+            </div>
+
+            <div className="card p-8">
+              <div className="w-12 h-12 bg-herb-500/10 rounded-lg flex items-center justify-center mb-4">
+                <Users className="w-6 h-6 text-herb-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Community
+              </h3>
+              <p className="text-gray-600">
+                We build bridges between farmers, manufacturers, and consumers,
+                creating a connected ecosystem of trust.
+              </p>
+            </div>
+
+            <div className="card p-8">
+              <div className="w-12 h-12 bg-herb-500/10 rounded-lg flex items-center justify-center mb-4">
+                <TestTube className="w-6 h-6 text-herb-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Quality
+              </h3>
+              <p className="text-gray-600">
+                Every product undergoes rigorous testing and quality checks to
+                ensure the highest standards of purity and safety.
+              </p>
+            </div>
+
+            <div className="card p-8">
+              <div className="w-12 h-12 bg-herb-500/10 rounded-lg flex items-center justify-center mb-4">
+                <Zap className="w-6 h-6 text-herb-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Innovation
+              </h3>
+              <p className="text-gray-600">
+                We continuously innovate to bring the latest technology to
+                traditional Ayurvedic practices.
+              </p>
+            </div>
+
+            <div className="card p-8">
+              <div className="w-12 h-12 bg-herb-500/10 rounded-lg flex items-center justify-center mb-4">
+                <Globe className="w-6 h-6 text-herb-500" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Global Impact
+              </h3>
+              <p className="text-gray-600">
+                We're working to make authentic Ayurvedic products accessible
+                and trustworthy worldwide.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 };
 
-export default AboutPage;
+export default About;

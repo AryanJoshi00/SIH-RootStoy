@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, QrCode, Home, Info, Shield, Leaf, Lock } from "lucide-react";
+import { Menu, X, QrCode, Home, Info } from "lucide-react";
 import Button from "./ui/Button";
+import logo from "../assets/logo.png";
+import RootScrollbar from "./RootScrollbar";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, isLoading }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -15,33 +17,42 @@ const Layout = ({ children }) => {
 
   const isActive = (path) => location.pathname === path;
 
+  const handleNavClick = () => {
+    // Immediate scroll to top
+    window.scrollTo(0, 0);
+    // Also try smooth scroll as backup
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 10);
+  };
+
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-white/90 backdrop-blur-md shadow-lg border-b border-herb-200/30 sticky top-0 z-40">
+      {/* Root Scrollbar - Hidden during loading */}
+      {!isLoading && <RootScrollbar />}
+      
+      {/* Header - Hidden during loading */}
+      {!isLoading && (
+        <header className="bg-white shadow-lg border-b border-herb-200/30 fixed top-0 left-0 right-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex items-center h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 group">
-              <div className="relative">
-                <div className="w-12 h-12 bg-herb-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-                  <Leaf className="h-7 w-7 text-white" />
+            <div className="flex-1">
+              <Link to="/" onClick={handleNavClick} className="flex items-center space-x-3">
+                <img 
+                  src={logo} 
+                  alt="RootStory Logo" 
+                  className="w-12 h-12 border-2 border-black rounded-xl"
+                />
+                <div>
+                  <span className="text-2xl font-display font-bold text-herb-700">
+                    RootStory
+                  </span>
                 </div>
-                <div className="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                  <Lock className="h-3 w-3 text-white" />
-                </div>
-              </div>
-              <div>
-                <span className="text-2xl font-display font-bold text-herb-700">
-                  AYURPHORIA
-                </span>
-                <p className="text-xs text-herb-600 font-medium -mt-1">
-                  No ayurphobia, only Ayurphoria
-                </p>
-              </div>
-            </Link>
+              </Link>
+            </div>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Centered */}
             <nav className="hidden md:flex space-x-8">
               {navigation.map((item) => {
                 const Icon = item.icon;
@@ -49,6 +60,7 @@ const Layout = ({ children }) => {
                   <Link
                     key={item.name}
                     to={item.href}
+                    onClick={handleNavClick}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                       isActive(item.href)
                         ? "bg-gradient-to-r from-herb-100 to-mint-100 text-herb-700 shadow-md"
@@ -63,22 +75,24 @@ const Layout = ({ children }) => {
             </nav>
 
             {/* Mobile menu button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-earth-100 transition-colors"
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
+            <div className="flex-1 flex justify-end">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg hover:bg-earth-100 transition-colors"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-earth-200 bg-white">
+          <div className="md:hidden border-t border-herb-200 bg-white">
             <div className="px-4 py-2 space-y-1">
               {navigation.map((item) => {
                 const Icon = item.icon;
@@ -86,11 +100,14 @@ const Layout = ({ children }) => {
                   <Link
                     key={item.name}
                     to={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      handleNavClick();
+                    }}
                     className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       isActive(item.href)
-                        ? "bg-emerald-100 text-emerald-700"
-                        : "text-earth-600 hover:text-earth-900 hover:bg-earth-100"
+                        ? "bg-herb-100 text-herb-700"
+                        : "text-herb-600 hover:text-herb-900 hover:bg-herb-100"
                     }`}
                   >
                     <Icon className="h-4 w-4" />
@@ -101,13 +118,15 @@ const Layout = ({ children }) => {
             </div>
           </div>
         )}
-      </header>
+        </header>
+      )}
 
       {/* Main Content */}
-      <main className="flex-1">{children}</main>
+      <main className={`flex-1 ${!isLoading ? 'pt-16' : ''}`}>{children}</main>
 
-      {/* Footer */}
-      <footer className="bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 border-t border-slate-600/20 mt-0 backdrop-blur-sm relative overflow-hidden">
+      {/* Footer - Hidden during loading */}
+      {!isLoading && (
+        <footer className="bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 border-t border-slate-600/20 mt-0 backdrop-blur-sm relative overflow-hidden">
         {/* Subtle Background Pattern */}
         <div className="absolute inset-0 opacity-3">
           <div
@@ -124,15 +143,17 @@ const Layout = ({ children }) => {
             {/* Brand Section */}
             <div className="md:col-span-2">
               <div className="flex items-center space-x-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <Leaf className="h-6 w-6 text-white" />
-                </div>
+                <img 
+                  src={logo} 
+                  alt="RootStory Logo" 
+                  className="w-10 h-10 border-2 border-white rounded-xl"
+                />
                 <span className="text-2xl font-display font-bold text-white">
-                  AYURPHORIA
+                  ROOTSTORY
                 </span>
               </div>
               <p className="text-slate-300 text-base leading-relaxed mb-6 max-w-md">
-                No ayurphobia, only Ayurphoria. Transparent, blockchain-verified
+                No ayurphobia, only RootStory. Transparent, blockchain-verified
                 provenance for Ayurvedic herbs with cutting-edge technology.
               </p>
               <div className="flex space-x-4">
@@ -174,6 +195,7 @@ const Layout = ({ children }) => {
                 </Link>
                 <Link
                   to="/"
+                  onClick={handleNavClick}
                   className="block text-slate-300 hover:text-white transition-colors text-sm"
                 >
                   Home
@@ -187,7 +209,7 @@ const Layout = ({ children }) => {
               <div className="space-y-3 text-sm text-slate-300">
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
-                  <span>info@ayurphoria.com</span>
+                  <span>info@rootstory.com</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 bg-emerald-500 rounded-full"></div>
@@ -204,7 +226,7 @@ const Layout = ({ children }) => {
           <div className="border-t border-slate-700/50 mt-12 pt-8">
             <div className="text-center">
               <p className="text-sm text-slate-400 mb-4">
-                © 2025 AYURPHORIA. All rights reserved. Built with ❤️ for SIH
+                © 2025 ROOTSTORY. All rights reserved. Built with ❤️ for SIH
                 Hackathon 2025.
               </p>
               <div className="flex justify-center space-x-6 text-sm text-slate-400">
@@ -221,7 +243,8 @@ const Layout = ({ children }) => {
             </div>
           </div>
         </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 };

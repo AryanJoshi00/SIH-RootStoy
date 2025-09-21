@@ -1,12 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+import { useState, useEffect } from "react";
 import HomePage from "./pages/HomePage";
 import ScanPage from "./pages/ScanPage";
 import ProductPage from "./pages/ProductPage";
 import RecallPage from "./pages/RecallPage";
 import AboutPage from "./pages/AboutPage";
 import Layout from "./components/Layout";
+import Loader from "./components/Loader";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -19,11 +21,22 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLoaderComplete = () => {
+    setIsLoading(false);
+    // Ensure we scroll to top after loading completes
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
         <div className="min-h-screen bg-earth-50">
-          <Layout>
+          {isLoading && <Loader onComplete={handleLoaderComplete} />}
+          <Layout isLoading={isLoading}>
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/scan" element={<ScanPage />} />

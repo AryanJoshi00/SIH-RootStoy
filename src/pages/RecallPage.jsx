@@ -216,7 +216,7 @@ const RecallPage = () => {
                       <p className="font-medium text-earth-900">
                         Email Support
                       </p>
-                      <p className="text-earth-600">recalls@ayurphoria.com</p>
+                      <p className="text-earth-600">recalls@rootstory.com</p>
                     </div>
                   </div>
                 </div>
@@ -253,7 +253,7 @@ const RecallPage = () => {
                         const subject = `Recall Inquiry - Batch ${batchCode}`;
                         const body = `I have a product from batch ${batchCode} and need assistance with the recall.`;
                         window.open(
-                          `mailto:recalls@ayurphoria.com?subject=${encodeURIComponent(
+                          `mailto:recalls@rootstory.com?subject=${encodeURIComponent(
                             subject
                           )}&body=${encodeURIComponent(body)}`
                         );

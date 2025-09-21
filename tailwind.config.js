@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // AYURPHORIA Herbal Color Palette
+        // ROOTSTORY Herbal Color Palette
         herb: {
           50: '#E7F6E0',   // leaf white
           100: '#D4F1C4',
@@ -80,6 +80,8 @@ export default {
           800: '#AD9C8A',
           900: '#958577',
         },
+        'herbal-green': '#32B768',
+        'neutral-warm': '#F5F5F4',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
