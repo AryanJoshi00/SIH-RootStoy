@@ -112,6 +112,11 @@ const QRScanner = ({ onScan, onClose, isOpen = false }) => {
       setScanSuccess(false);
       isProcessingRef.current = false;
 
+      // Check if getUserMedia is available
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("Camera API not supported");
+      }
+
       // Get camera stream and store it
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment" }, // Use back camera on mobile

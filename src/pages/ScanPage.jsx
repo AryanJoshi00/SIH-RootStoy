@@ -16,6 +16,12 @@ const ScanPage = () => {
     // Check if camera is available
     const checkCamera = async () => {
       try {
+        // Check if navigator.mediaDevices is available
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+          setHasCamera(false);
+          return;
+        }
+        
         const devices = await navigator.mediaDevices.enumerateDevices();
         const videoDevices = devices.filter(
           (device) => device.kind === "videoinput"
@@ -76,12 +82,15 @@ const ScanPage = () => {
           <Button
             variant="ghost"
             onClick={() => navigate("/")}
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 text-sm md:text-base"
           >
             <ArrowLeft className="h-4 w-4" />
-            <span>Back to Home</span>
+            <span className="whitespace-nowrap">
+              <span className="md:hidden">Home</span>
+              <span className="hidden md:inline">Back to Home</span>
+            </span>
           </Button>
-          <h1 className="text-2xl font-display font-bold text-earth-900">
+          <h1 className="text-xl md:text-2xl font-display font-bold text-earth-900 whitespace-nowrap">
             Scan QR Code
           </h1>
           <div className="w-20"></div> {/* Spacer for centering */}
@@ -89,7 +98,7 @@ const ScanPage = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Scanner and Manual Entry */}
-          <div className="space-y-6">
+          <div className="space-y-6 order-1 lg:order-1">
             {/* Camera Scanner Section */}
             <div className="card p-6">
               <h2 className="text-2xl font-display font-semibold text-gray-900 mb-4 flex items-center">
@@ -181,7 +190,7 @@ const ScanPage = () => {
           </div>
 
           {/* Right Column - Instructions and Sample Codes */}
-          <div className="space-y-6">
+          <div className="space-y-6 order-2 lg:order-2">
             {/* How to Use */}
             <div className="card p-6 bg-herbal-green/5 border border-herbal-green/20">
               <h3 className="text-lg font-display font-semibold text-gray-900 mb-3">

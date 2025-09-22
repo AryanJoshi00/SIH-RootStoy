@@ -93,8 +93,8 @@ const Layout = ({ children, isLoading }) => {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-herb-200 bg-white">
-            <div className="px-4 py-2 space-y-1">
+          <div className="md:hidden border-t border-herb-200 bg-white shadow-lg">
+            <div className="px-6 py-4 space-y-2">
               {navigation.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -105,13 +105,13 @@ const Layout = ({ children, isLoading }) => {
                       setIsMobileMenuOpen(false);
                       handleNavClick();
                     }}
-                    className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-4 px-4 py-4 rounded-xl text-base font-medium transition-all duration-200 ${
                       isActive(item.href)
-                        ? "bg-herb-100 text-herb-700"
-                        : "text-herb-600 hover:text-herb-900 hover:bg-herb-100"
+                        ? "bg-gradient-to-r from-herb-100 to-mint-100 text-herb-700 shadow-md"
+                        : "text-herb-600 hover:text-herb-900 hover:bg-gradient-to-r hover:from-herb-50 hover:to-mint-50 hover:shadow-sm"
                     }`}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-5 w-5" />
                     <span>{item.name}</span>
                   </Link>
                 );

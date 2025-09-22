@@ -279,9 +279,25 @@ const ProductPage = () => {
 
                   <Button
                     variant="outline"
-                    onClick={() => {
-                      navigator.clipboard.writeText(product.blockchainHash);
-                      toast.success("Blockchain hash copied to clipboard");
+                    onClick={async () => {
+                      try {
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                          await navigator.clipboard.writeText(product.blockchainHash);
+                          toast.success("Blockchain hash copied to clipboard");
+                        } else {
+                          // Fallback for older browsers
+                          const textArea = document.createElement('textarea');
+                          textArea.value = product.blockchainHash;
+                          document.body.appendChild(textArea);
+                          textArea.select();
+                          document.execCommand('copy');
+                          document.body.removeChild(textArea);
+                          toast.success("Blockchain hash copied to clipboard");
+                        }
+                      } catch (error) {
+                        console.error("Failed to copy to clipboard:", error);
+                        toast.error("Failed to copy to clipboard");
+                      }
                     }}
                     className="w-full flex items-center justify-center space-x-2"
                   >

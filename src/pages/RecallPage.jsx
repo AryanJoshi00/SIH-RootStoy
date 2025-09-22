@@ -235,11 +235,25 @@ const RecallPage = () => {
                   <>
                     <Button
                       variant="danger"
-                      onClick={() => {
-                        navigator.clipboard.writeText(recall.contactInfo);
-                        toast.success(
-                          "Contact information copied to clipboard"
-                        );
+                      onClick={async () => {
+                        try {
+                          if (navigator.clipboard && navigator.clipboard.writeText) {
+                            await navigator.clipboard.writeText(recall.contactInfo);
+                            toast.success("Contact information copied to clipboard");
+                          } else {
+                            // Fallback for older browsers
+                            const textArea = document.createElement('textarea');
+                            textArea.value = recall.contactInfo;
+                            document.body.appendChild(textArea);
+                            textArea.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(textArea);
+                            toast.success("Contact information copied to clipboard");
+                          }
+                        } catch (error) {
+                          console.error("Failed to copy to clipboard:", error);
+                          toast.error("Failed to copy to clipboard");
+                        }
                       }}
                       className="w-full flex items-center justify-center space-x-2"
                     >
@@ -250,13 +264,19 @@ const RecallPage = () => {
                     <Button
                       variant="outline"
                       onClick={() => {
-                        const subject = `Recall Inquiry - Batch ${batchCode}`;
-                        const body = `I have a product from batch ${batchCode} and need assistance with the recall.`;
-                        window.open(
-                          `mailto:recalls@rootstory.com?subject=${encodeURIComponent(
+                        try {
+                          const subject = `Recall Inquiry - Batch ${batchCode}`;
+                          const body = `I have a product from batch ${batchCode} and need assistance with the recall.`;
+                          const mailtoUrl = `mailto:recalls@rootstory.com?subject=${encodeURIComponent(
                             subject
-                          )}&body=${encodeURIComponent(body)}`
-                        );
+                          )}&body=${encodeURIComponent(body)}`;
+                          
+                          window.open(mailtoUrl);
+                        } catch (error) {
+                          console.error("Error opening email client:", error);
+                          // Fallback: copy email address to clipboard
+                          navigator.clipboard?.writeText('recalls@rootstory.com');
+                        }
                       }}
                       className="w-full flex items-center justify-center space-x-2"
                     >

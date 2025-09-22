@@ -9,8 +9,20 @@ const DownloadAppPage = () => {
   }, []);
 
   const handleDownloadClick = () => {
-    // Open Google Drive download link in new tab
-    window.open('https://drive.google.com/file/d/17uyZ5FutcsoGDzjDnQf9rsTOLtHPaD33/view?usp=sharing', '_blank');
+    try {
+      // Open Google Drive download link in new tab
+      const newWindow = window.open('https://drive.google.com/file/d/17uyZ5FutcsoGDzjDnQf9rsTOLtHPaD33/view?usp=sharing', '_blank');
+      
+      // Check if popup was blocked
+      if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+        // Fallback: redirect in same tab
+        window.location.href = 'https://drive.google.com/file/d/17uyZ5FutcsoGDzjDnQf9rsTOLtHPaD33/view?usp=sharing';
+      }
+    } catch (error) {
+      console.error("Error opening download link:", error);
+      // Fallback: redirect in same tab
+      window.location.href = 'https://drive.google.com/file/d/17uyZ5FutcsoGDzjDnQf9rsTOLtHPaD33/view?usp=sharing';
+    }
   };
 
   return (

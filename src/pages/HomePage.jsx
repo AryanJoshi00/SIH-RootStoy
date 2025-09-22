@@ -239,8 +239,10 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto relative z-10 px-4">
           <div className="text-center max-w-5xl mx-auto">
             {/* Enhanced Typography with Text Shadow */}
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black mb-8 text-herb-800 leading-tight whitespace-nowrap">
-              Rooted. Verified. Authentic.
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black mb-8 text-herb-800 leading-tight md:whitespace-nowrap">
+              <span className="block md:inline">Rooted.</span>
+              <span className="block md:inline"> Verified.</span>
+              <span className="block md:inline"> Authentic.</span>
             </h1>
 
             <p className="text-3xl md:text-4xl font-display font-bold text-herb-800 mb-6 leading-tight">
@@ -274,34 +276,34 @@ const HomePage = () => {
             </div>
 
             {/* Enhanced Trust Indicators */}
-            <div className="flex flex-wrap justify-center items-center gap-12">
-              <div className="flex items-center space-x-3 text-herb-700 group">
+            <div className="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-12">
+              <div className="flex flex-col items-center space-y-4 text-herb-700 group">
                 <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
                   <CheckCircle className="h-6 w-6 text-white" />
                 </div>
-                <div>
+                <div className="text-center">
                   <div className="font-semibold text-herb-800">
                     100% Authentic
                   </div>
                   <div className="text-sm text-herb-600">Verified Source</div>
                 </div>
               </div>
-              <div className="flex items-center space-x-3 text-herb-700 group">
+              <div className="flex flex-col items-center space-y-4 text-herb-700 group">
                 <div className="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
                   <Shield className="h-6 w-6 text-white" />
                 </div>
-                <div>
+                <div className="text-center">
                   <div className="font-semibold text-herb-800">
                     Blockchain Secured
                   </div>
                   <div className="text-sm text-herb-600">Tamper-Proof</div>
                 </div>
               </div>
-              <div className="flex items-center space-x-3 text-herb-700 group">
+              <div className="flex flex-col items-center space-y-4 text-herb-700 group">
                 <div className="w-12 h-12 bg-emerald-600 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
                   <Leaf className="h-6 w-6 text-white" />
                 </div>
-                <div>
+                <div className="text-center">
                   <div className="font-semibold text-herb-800">
                     Organic Certified
                   </div>
