@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, QrCode, Home, Info } from "lucide-react";
+import { Menu, X, QrCode, Home, Info, Smartphone } from "lucide-react";
 import Button from "./ui/Button";
 import logo from "../assets/logo.png";
 import RootScrollbar from "./RootScrollbar";
@@ -12,6 +12,7 @@ const Layout = ({ children, isLoading }) => {
   const navigation = [
     { name: "Home", href: "/", icon: Home },
     { name: "Scan", href: "/scan", icon: QrCode },
+    { name: "App", href: "/download", icon: Smartphone },
     { name: "About", href: "/about", icon: Info },
   ];
 
@@ -186,6 +187,12 @@ const Layout = ({ children, isLoading }) => {
                   className="block text-slate-300 hover:text-white transition-colors text-sm"
                 >
                   About Us
+                </Link>
+                <Link
+                  to="/download"
+                  className="block text-slate-300 hover:text-white transition-colors text-sm"
+                >
+                  Download App
                 </Link>
                 <Link
                   to="/recall/D999XX"

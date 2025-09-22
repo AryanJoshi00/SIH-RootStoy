@@ -4,18 +4,11 @@ import {
   Shield,
   Globe,
   Users,
-  Award,
   Zap,
   Database,
   Cloud,
   Lock,
   TestTube,
-  MapPin,
-  CheckCircle,
-  QrCode,
-  Code,
-  Container,
-  Server,
 } from "lucide-react";
 
 const About = () => {

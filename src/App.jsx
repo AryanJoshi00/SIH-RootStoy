@@ -7,6 +7,7 @@ import ScanPage from "./pages/ScanPage";
 import ProductPage from "./pages/ProductPage";
 import RecallPage from "./pages/RecallPage";
 import AboutPage from "./pages/AboutPage";
+import DownloadAppPage from "./pages/DownloadAppPage";
 import Layout from "./components/Layout";
 import Loader from "./components/Loader";
 
@@ -43,6 +44,7 @@ function App() {
               <Route path="/product/:code" element={<ProductPage />} />
               <Route path="/recall/:batchCode" element={<RecallPage />} />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/download" element={<DownloadAppPage />} />
             </Routes>
           </Layout>
           <Toaster
